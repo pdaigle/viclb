@@ -109,7 +109,7 @@ As a user of the script this is the only section you need to modify.
 - NUM_INSTANCES - this is the number of instances that will be running behind the load-balancer.
 - INSTANCE_PORT - the port that your service listens on. This will be injected in our HAProxy configuration file. This example uses a simple web server listening on port 80.
 - LB_PORT - the port to use to publish the service on the load-balancer. This will be injected into the HAProxy configuration file. 
-- INSTANCE_CTR_PREFIX & LB_CTR_NAME - these are arbitrary names to identify the running instances and the laod=balancer, respectively.
+- INSTANCE_CTR_PREFIX & LB_CTR_NAME - these are arbitrary names to identify the running instances and the load-balancer, respectively.
 
 The script will use these parameters to pull the images, instantiate the user-defined number of instances, generate the HAProxy configuration file and create the laod-balancer.
 
