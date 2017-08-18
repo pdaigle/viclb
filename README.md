@@ -1,4 +1,5 @@
 # Deploying a service behind a load-balancer
+
 This section gives an example of deploying multiple intances of a given service behind a load-balancer that provides a single IP address for access and load distribution.
 
 We will use a scripting approach that will allow us to generate the necessary load-balancer configuration file dynamically based on certain user-defined parameters.
@@ -12,7 +13,7 @@ To deploy a service behind a load-balancer, we need to consider:
 
 In this example, we will use [HAProxy](http://www.haproxy.org/) as the load-balancing solution. HAProxy is a free, open source load-balancer for TCP and HTTP-based applications.
 
-For publishing the service out from the load-balancer, we will leverage vSphere Integrated Cotainer's ability to connect containers directly to vSphere Port Groups and not through the Container Host. This allows for clean separation between networks used for inter-process communications and networks use to publish services externally. You can find more inforamtion on how to set this up [here](https://blogs.vmware.com/vsphere/2017/02/connecting-containers-directly-external-networks.html).
+For publishing the service out from the load-balancer, we will leverage vSphere Integrated Container's ability to connect containers directly to vSphere Port Groups and not through the Container Host. This allows for clean separation between networks used for inter-process communications and networks used to publish services externally. You can find more inforamtion on how to set this up [here](https://blogs.vmware.com/vsphere/2017/02/connecting-containers-directly-external-networks.html).
 
 Here is an example script to set this up:
 
@@ -105,7 +106,7 @@ EXTERNAL_NET=routable
 ```
 As a user of the script this is the only section you need to modify. 
 - INSTANCE_IMG - this is the docker image you wish to use for your service instances. In this example we use a simple, unmodified `httpd` from Docker Hub.
-- NUM_INSTANCES - this is the number of instances taht will be running behind the load-balancer.
+- NUM_INSTANCES - this is the number of instances that will be running behind the load-balancer.
 - INSTANCE_PORT - the port that your service listens on. This will be injected in our HAProxy configuration file. This example uses a simple web server listening on port 80.
 - LB_PORT - the port to use to publish the service on the load-balancer. This will be injected into the HAProxy configuration file. 
 - INSTANCE_CTR_PREFIX & LB_CTR_NAME - these are arbitrary names to identify the running instances and the laod=balancer, respectively.
@@ -128,7 +129,7 @@ docker network create $INSTANCE_CTR_PREFIX-net
 
 First we pull the 2 necessary images (INSTANCE_IMG that was defined above and haproxy:1.7).
 
-Then we define a bridge network to be used for communications between our instances and the load-balancer. This user-defined network has an embedded DNS server that allows us to reference the containers by name when configuring the laod-balancer.
+Then we define a bridge network to be used for communications between our instances and the load-balancer. This user-defined network has an embedded DNS server that allows us to reference the containers by name when configuring the load-balancer.
 
 ## Instantiating the containers
 
@@ -165,7 +166,7 @@ docker start $LB_CTR_NAME
 [...]
 ```
 
-Here we use the `docker create` command (rather than `docker run`) because we want to connect our load-balancer to two networks and because we want to copy our load-balancer configuration file before we start it up.
+Here we use the `docker create` command (rather than `docker run`) because we want to connect our load-balancer to two networks and because we want to copy our load-balancer configuration file to the container before we start it up.
 
 ## Running the srcipt
 
