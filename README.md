@@ -9,7 +9,7 @@ To deploy a service behind a load-balancer, we need to consider:
 2. What docker image will I use to instantiate the service?
 3. How many instances of the service of the service to I want to run?
 4. What ports from the container instances do I need to load-balance?
-5. What port on the laod-balancer will be used to provide the service?
+5. What port on the load-balancer will be used to provide the service?
 
 In this example, we will use [HAProxy](http://www.haproxy.org/) as the load-balancing solution. HAProxy is a free, open source load-balancer for TCP and HTTP-based applications.
 
@@ -81,7 +81,7 @@ docker cp haproxy.cfg $LB_CTR_NAME:/usr/local/etc/haproxy/haproxy.cfg
 docker start $LB_CTR_NAME
 ```
 
-Let's break this up to better understand what this script does.
+Let's break this down to better understand what this script does.
 
 ## User-defined variables
 
@@ -104,14 +104,15 @@ LB_CTR_NAME=lb
 EXTERNAL_NET=routable
 [...]
 ```
+
 As a user of the script this is the only section you need to modify. 
-- INSTANCE_IMG - this is the docker image you wish to use for your service instances. In this example we use a simple, unmodified `httpd` from Docker Hub.
+- INSTANCE_IMG - this is the docker image you wish to use for your service instances. In this example we use a simple, unmodified `httpd` image from Docker Hub.
 - NUM_INSTANCES - this is the number of instances that will be running behind the load-balancer.
 - INSTANCE_PORT - the port that your service listens on. This will be injected in our HAProxy configuration file. This example uses a simple web server listening on port 80.
 - LB_PORT - the port to use to publish the service on the load-balancer. This will be injected into the HAProxy configuration file. 
-- INSTANCE_CTR_PREFIX & LB_CTR_NAME - these are arbitrary names to identify the running instances and the load-balancer, respectively.
+- INSTANCE\_CTR\_PREFIX and LB\_CTR_NAME - these are arbitrary names to identify the running instances and the load-balancer, respectively.
 
-The script will use these parameters to pull the images, instantiate the user-defined number of instances, generate the HAProxy configuration file and create the laod-balancer.
+The script will use these parameters to pull the images, instantiate the user-defined number of instances, generate the HAProxy configuration file and create the load-balancer.
 
 ## Pulling the images and creating the user-defined bridge network
 
@@ -146,8 +147,8 @@ done
 ```
 
 This simple `for` loop repeats NUM_INSTANCES times. For each iteration, it:
-1. runs a container using the image defined in INSTANCE\_IMG above. For the name, we use INSTANCE\_CTR\_PREFIX followed by a nmuber (e.g. web-1). We connect it to our user-defined bridge and we run it detached (`-d`)
-2. we add an entry for this instance in our haproxy configuration file.
+1. runs a container using the image defined in INSTANCE\_IMG above. For the name, we use INSTANCE\_CTR_PREFIX followed by a nmuber (e.g. web-1). We connect it to our user-defined bridge and we run it detached (`-d`)
+2. we add an entry for this instance in our HAProxy configuration file.
 
 ## Starting the load-balancer
 
@@ -168,7 +169,7 @@ docker start $LB_CTR_NAME
 
 Here we use the `docker create` command (rather than `docker run`) because we want to connect our load-balancer to two networks and because we want to copy our load-balancer configuration file to the container before we start it up.
 
-## Running the srcipt
+## Running the script
 
 Before running the script, you need to point your docker client to a VCH endpoint. This is done by setting `DOCKER_HOST=<endpoint-ip>:<port>`.
 
