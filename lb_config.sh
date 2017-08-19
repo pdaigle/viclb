@@ -46,7 +46,7 @@ for i in $(seq "${NUM_INSTANCES}"); do
   # run web instance
   docker run -d -p $INSTANCE_PORT --name $INSTANCE_CTR_PREFIX-${i} --net $INSTANCE_CTR_PREFIX-net $INSTANCE_IMG
   # add entry in load-balancer config file
-  echo -e '\t'server\ server1\ $INSTANCE_CTR_PREFIX-${i}:$INSTANCE_PORT\ maxconn\ 32 >> haproxy.cfg
+  echo -e '\t'server\ server${i}\ $INSTANCE_CTR_PREFIX-${i}:$INSTANCE_PORT\ maxconn\ 32 >> haproxy.cfg
 done
 
 # create the load-balancer

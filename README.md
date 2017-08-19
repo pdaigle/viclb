@@ -172,7 +172,7 @@ Here we use the `docker create` command (rather than `docker run`) because we wa
 
 Before running the script, you need to point your docker client to a VCH endpoint. This is done by setting `DOCKER_HOST=<endpoint-ip>:<port>`.
 
-After you run the script, you need to find its public IP address. You can find out by running:
+After you run the script, you need to find the load-balancer's public IP address. You can find out by running:
 
 ```
 docker inspect -f '{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' lb
