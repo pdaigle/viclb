@@ -59,3 +59,8 @@ docker network connect $INSTANCE_CTR_PREFIX-net $LB_CTR_NAME
 docker cp haproxy.cfg $LB_CTR_NAME:/usr/local/etc/haproxy/haproxy.cfg
 # start the load-balancer
 docker start $LB_CTR_NAME
+
+# Grab the load-balancer's public IP Address
+echo -e '\n'\Service\ is\ available\ at
+docker inspect -f "{{ .NetworkSettings.Networks.$EXTERNAL_NET.IPAddress}}" $LB_CTR_NAME
+echo -e on\ port\ $LB_PORT

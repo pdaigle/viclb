@@ -66,7 +66,7 @@ for i in $(seq "${NUM_INSTANCES}"); do
   # run web instance
   docker run -d -p $INSTANCE_PORT --name $INSTANCE_CTR_PREFIX-${i} --net $INSTANCE_CTR_PREFIX-net $INSTANCE_IMG
   # add entry in load-balancer config file
-  echo -e '\t'server\ server1\ $INSTANCE_CTR_PREFIX-${i}:$INSTANCE_PORT\ maxconn\ 32 >> haproxy.cfg
+  echo -e '\t'server\ server${i}\ $INSTANCE_CTR_PREFIX-${i}:$INSTANCE_PORT\ maxconn\ 32 >> haproxy.cfg
 done
 
 # create the load-balancer
@@ -79,6 +79,11 @@ docker network connect $INSTANCE_CTR_PREFIX-net $LB_CTR_NAME
 docker cp haproxy.cfg $LB_CTR_NAME:/usr/local/etc/haproxy/haproxy.cfg
 # start the load-balancer
 docker start $LB_CTR_NAME
+
+# Grab the load-balancer's public IP Address
+echo -e '\n'\Service\ is\ available\ at
+docker inspect -f "{{ .NetworkSettings.Networks.$EXTERNAL_NET.IPAddress}}" $LB_CTR_NAME
+echo -e on\ port\ $LB_PORT
 ```
 
 Let's break this up to better understand what this script does.
@@ -104,6 +109,7 @@ LB_CTR_NAME=lb
 EXTERNAL_NET=routable
 [...]
 ```
+
 As a user of the script this is the only section you need to modify. 
 - INSTANCE_IMG - this is the docker image you wish to use for your service instances. In this example we use a simple, unmodified `httpd` from Docker Hub.
 - NUM_INSTANCES - this is the number of instances that will be running behind the load-balancer.
@@ -140,7 +146,7 @@ for i in $(seq "${NUM_INSTANCES}"); do
   # run web instance
   docker run -d -p $INSTANCE_PORT --name $INSTANCE_CTR_PREFIX-${i} --net $INSTANCE_CTR_PREFIX-net $INSTANCE_IMG
   # add entry in load-balancer config file
-  echo -e '\t'server\ server1\ $INSTANCE_CTR_PREFIX-${i}:$INSTANCE_PORT\ maxconn\ 32 >> haproxy.cfg
+  echo -e '\t'server\ server${i}\ $INSTANCE_CTR_PREFIX-${i}:$INSTANCE_PORT\ maxconn\ 32 >> haproxy.cfg
 done
 [...]
 ```
